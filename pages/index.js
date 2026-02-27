@@ -1,68 +1,72 @@
 import Link from 'next/link';
-import { getPosts } from '../utils/mdx-utils';
-
-import Footer from '../components/Footer';
-import Header from '../components/Header';
-import Layout, { GradientBackground } from '../components/Layout';
-import ArrowIcon from '../components/ArrowIcon';
 import { getGlobalData } from '../utils/global-data';
+import Layout from '../components/Layout';
 import SEO from '../components/SEO';
+import React, { useState } from 'react';
 
-export default function Index({ posts, globalData }) {
-  return (
-    <Layout>
-      <SEO title={globalData.name} description={globalData.blogTitle} />
-      <Header name={globalData.name} />
-      <main className="w-full">
-        <h1 className="mb-12 text-3xl text-center lg:text-5xl">
-          {globalData.blogTitle}
-        </h1>
-        <ul className="w-full">
-          {posts.map((post) => (
-            <li
-              key={post.filePath}
-              className="transition border border-b-0 bg-white/10 border-gray-800/10 md:first:rounded-t-lg md:last:rounded-b-lg backdrop-blur-lg dark:bg-black/30 hover:bg-white/20 dark:hover:bg-black/50 dark:border-white/10 last:border-b"
-            >
-              <Link
-                as={`/posts/${post.filePath.replace(/\.mdx?$/, '')}`}
-                href={`/posts/[slug]`}
-                className="block px-6 py-6 lg:py-10 lg:px-16 focus:outline-hidden focus:ring-4 focus:ring-primary/50"
-              >
-                {post.data.date && (
-                  <p className="mb-3 font-bold uppercase opacity-60">
-                    {post.data.date}
-                  </p>
-                )}
-                <h2 className="text-2xl md:text-3xl">
-                  {post.data.title}
-                </h2>
-                {post.data.description && (
-                  <p className="mt-3 text-lg opacity-60">
-                    {post.data.description}
-                  </p>
-                )}
-                <ArrowIcon className="mt-4" />
-              </Link>
-            </li>
-          ))}
-        </ul>
-      </main>
-      <Footer copyrightText={globalData.footerText} />
-      <GradientBackground
-        variant="large"
-        className="fixed top-20 opacity-40 dark:opacity-60"
-      />
-      <GradientBackground
-        variant="small"
-        className="absolute bottom-0 opacity-20 dark:opacity-10"
-      />
-    </Layout>
-  );
+export default function Index({ globalData }) {
+const [url, setUrl] = useState('');
+const [loading, setLoading] = useState(false);
+
+const handleGo = () => {
+if(!url) return alert("Paste Link First!");
+setLoading(true);
+// Yahan hum baad mein backend link connect karenge
+setTimeout(() => {
+alert("Backend Connection Pending! Please setup Render API.");
+setLoading(false);
+}, 1500);
+};
+
+return (
+<Layout gradientColor="orange">
+<SEO title={globalData.name} description={globalData.blogTitle} />
+<main className="w-full" style={{ background: '#f0f2f5', minHeight: '100vh', paddingBottom: '50px' }}>
+
+{/* Vidmate Style Header */}
+<div style={{ background: '#ff4e00', padding: '40px 20px', borderRadius: '0 0 30px 30px', textAlign: 'center' }}>
+<h1 style={{ color: 'white', fontSize: '2rem', marginBottom: '20px' }}>Ajay Reels Pro</h1>
+<div style={{ display: 'flex', background: 'white', borderRadius: '15px', padding: '5px', maxWidth: '500px', margin: 'auto' }}>
+<input
+type="text"
+placeholder="Paste Video Link..."
+style={{ flex: 1, border: 'none', padding: '15px', outline: 'none', borderRadius: '15px' }}
+value={url}
+onChange={(e) => setUrl(e.target.value)}
+/>
+<button
+onClick={handleGo}
+style={{ background: '#222', color: 'white', border: 'none', padding: '0 25px', borderRadius: '12px', fontWeight: 'bold' }}
+>
+{loading ? '...' : 'GO'}
+</button>
+</div>
+</div>
+
+{/* Services Grid */}
+<div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '15px', padding: '30px 20px', maxWidth: '600px', margin: 'auto' }}>
+{['📺 YT', '📸 Insta', '📘 FB', '🐦 X'].map(item => (
+<div key={item} style={{ textAlign: 'center' }}>
+<div style={{ background: 'white', height: '60px', width: '60px', borderRadius: '20px', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 10px', fontSize: '1.5rem', boxShadow: '0 4px 6px rgba(0,0,0,0.05)' }}>
+{item.split(' ')[0]}
+</div>
+<span style={{ fontSize: '0.8rem', fontWeight: 'bold' }}>{item.split(' ')[1]}</span>
+</div>
+))}
+</div>
+
+<div style={{ textAlign: 'center', padding: '20px', color: '#666' }}>
+<p>Download HD Reels & Shorts Instantly</p>
+</div>
+
+</main>
+</Layout>
+);
 }
 
-export function getStaticProps() {
-  const posts = getPosts();
-  const globalData = getGlobalData();
-
-  return { props: { posts, globalData } };
+export async function getStaticProps() {
+const globalData = getGlobalData();
+return { props: { globalData } };
 }
+
+       
