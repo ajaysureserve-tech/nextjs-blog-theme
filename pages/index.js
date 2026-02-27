@@ -12,7 +12,7 @@ export default function Home() {
     
     try {
       // BADLAV 1: Humne direct aapka Render URL daal diya hai
-      const apiBase = "https://ajay-api-backed.onrender.com";
+      const apiBase = "https://ajay-reels-api.onrender.com";
       
       const res = await fetch(`${apiBase}/api/download?url=${encodeURIComponent(url)}`);
       
