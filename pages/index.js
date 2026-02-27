@@ -1,3 +1,6 @@
+import Link from 'next/link';
+import Layout from '../components/Layout';
+import SEO from '../components/SEO';
 const handleGo = async () => {
 if (!url) return alert("Paste Link First!");
 setLoading(true);
