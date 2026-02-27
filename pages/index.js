@@ -8,19 +8,26 @@ export default function Home() {
   const handleDownload = async () => {
     if (!url) return alert("Please paste a link first!");
     setLoading(true);
+    setData(null); // Purana data clear karne ke liye
+    
     try {
-      // Jab aap Render par backend bana lenge, tab ye URL wahan se connect hoga
-      const apiBase = process.env.NEXT_PUBLIC_API_URL || 'https://your-backend-url.onrender.com';
+      // BADLAV 1: Humne direct aapka Render URL daal diya hai
+      const apiBase = "https://ajay-api-backed.onrender.com";
+      
       const res = await fetch(`${apiBase}/api/download?url=${encodeURIComponent(url)}`);
+      
+      if (!res.ok) throw new Error("Server response error");
+
       const result = await res.json();
       
       if (result.status === "success") {
         setData(result);
       } else {
-        alert("Could not fetch video. Check the link.");
+        alert("Video nahi mil payi. Link sahi se check karein.");
       }
     } catch (err) {
-      alert("Backend connection pending! Please setup Render API.");
+      // BADLAV 2: Error message ko thoda dhang ka banaya hai
+      alert("Server jaag raha hai (Render Free Tier)! 20 second rukk kar dobara 'Download Now' dabayein.");
     }
     setLoading(false);
   };
@@ -71,7 +78,7 @@ export default function Home() {
               transition: '0.3s'
             }}
           >
-            {loading ? 'Fetching Video...' : 'Download Now'}
+            {loading ? 'Server jaag raha hai...' : 'Download Now'}
           </button>
         </div>
 
@@ -90,7 +97,8 @@ export default function Home() {
               style={{ width: '100%', borderRadius: '8px', marginBottom: '15px' }} 
             />
             <h4 style={{ marginBottom: '20px' }}>{data.title}</h4>
-            <a href={data.download_url} target="_blank" rel="noreferrer" download>
+            {/* Direct download link download attribute ke saath */}
+            <a href={data.download_url} target="_blank" rel="noreferrer">
               <button style={{ 
                 width: '100%', 
                 padding: '15px', 
